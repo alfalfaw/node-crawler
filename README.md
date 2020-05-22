@@ -1,6 +1,6 @@
 # node-crawler
 
-> A Express project
+> Express project
 
 ## Build Setup
 
