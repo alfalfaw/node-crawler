@@ -10,7 +10,7 @@ const {
 } = require("../config/keys");
 /**
  *
- * @param {Object} data 数据
+ * @param {Object} data 数据{key1: value1, key2: value2 }
  * @param {String} filename 邮件模板
  */
 async function sendMail(data, filename) {
@@ -39,9 +39,7 @@ async function sendMail(data, filename) {
       from: `"Crawler App" <${email_from}>`, // sender address
       to: `${email_to}`, // list of receivers
       subject: "订阅邮件", // Subject line
-      // text: "Hello world?", // plain text body
-      // 传递字典
-      html: template({ data }), // html body
+      html: template(data), // html body
     })
     .then(() => {
       console.log("mail sended");

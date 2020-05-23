@@ -1,7 +1,8 @@
+// 用户的ID
 vid = 353788331;
-email_from = "limuyle@163.com";
-email_pass = "limu980830";
-email_to = "2092268387@qq.com";
+email_from = "xxxx@163.com";
+email_pass = "xxxx";
+email_to = "xxxx@gmail.com";
 email_port = 465;
 module.exports = {
   vid,
