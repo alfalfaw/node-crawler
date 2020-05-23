@@ -13,7 +13,15 @@ async function cache(req, res, next) {
         res.send({ msg: "没有数据" });
       }
     } else {
-      await bilibiliDynamic.deleteMany({});
+      const last_dynamic = await bilibiliDynamic
+        .findOne()
+        .sort({ pubdate: -1 });
+
+      // console.log(last_dynamic);
+      if (last_dynamic) {
+        req.query.last_pubdate = last_dynamic.pubdate;
+        await bilibiliDynamic.deleteMany({});
+      }
       next();
     }
   });

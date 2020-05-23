@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&family=Source+Sans+Pro:wght@400;700&display=swap");
+
+    @import url("https://fonts.googleapis.com/css2?family=Alegreya:ital@1&display=swap");
+
+    * {
+      margin: 0;
+      border: 0;
+      padding: 0;
+    }
+
+    body {
+      /* font-family: "source code pro"; */
+      background: #d8dbdb;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2%;
+      color: #565859;
+    }
+
+    *::selection {
+      background: #df846c;
+      color: #fff;
+    }
+
+    .wrapper {
+      position: relative;
+      background: #f6faff;
+      border-radius: 8px;
+      transition: 0.6s;
+    }
+
+    .wrapper:hover {
+      box-shadow: 10px 3px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    header {
+      position: relative;
+    }
+
+    .github-corner {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      right: 0;
+      z-index: 1;
+      /* background: white; */
+      border-radius: 50%;
+    }
+
+    .banner-wrapper {
+      width: 100%;
+      height: 400px;
+      position: relative;
+      background-image: url(https://cdn.img.wenhairu.com/images/2020/05/22/YOfz0.jpg);
+      background-position: center top;
+      background-size: cover;
+      overflow: hidden;
+      /* border-top-left-radius: 8px; */
+      border-top-left-radius: 8px;
+    }
+
+    .banner {
+      width: 96%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 2%;
+
+      /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); */
+      overflow: hidden;
+      box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.5);
+      box-sizing: border-box;
+    }
+
+    .banner::after {
+      content: "";
+      position: absolute;
+
+      filter: blur(20px);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.8);
+      z-index: -1;
+    }
+
+    .one-col,
+    .two-col {
+      padding: 2%;
+    }
+
+    .one-col {
+      overflow: hidden;
+    }
+
+    .one-col p {
+      text-align: justify;
+      text-indent: 2rem;
+      padding: 0 2%;
+    }
+
+    .button-holder {
+      float: right;
+      background: #df846c;
+      color: #f6faff;
+      padding: 1% 1.5%;
+      font-weight: 800;
+      border-radius: 0.3rem;
+      margin-top: 2%;
+      margin-right: 2%;
+      transition: 0.6s;
+    }
+
+    .button-holder:hover {
+      text-shadow: 1px 1px 4px #aaa;
+      background-color: #e68d74;
+    }
+
+    h3 {
+      color: #df846c;
+      letter-spacing: 0.2rem;
+      padding-bottom: 0.5rem;
+      font-family: Alegreya;
+      text-shadow: 1px 1px 4px #aaa;
+    }
+
+    .line {
+      clear: both;
+      height: 1px;
+      background-color: #e3e3e9;
+      margin: 5% auto 3% auto;
+      width: 96%;
+    }
+
+    .two-col .box {
+      float: left;
+      width: 46%;
+      padding: 2%;
+    }
+
+    footer {
+      padding: 1% 0 2% 0;
+      text-align: center;
+      font-size: 0.6rem;
+      color: #333;
+      line-height: 25px;
+      text-shadow: 1px 1px 4px #aaa;
+    }
+
+    .stats {
+      padding: 0 0 12px 0;
+      color: #999;
+      font-size: 0;
+    }
+
+    .stats span {
+      font-size: 16px;
+    }
+
+    .stats .value+.value::before {
+      position: relative;
+      top: 1px;
+      content: "";
+      display: inline-block;
+      height: 14px;
+      width: 1px;
+      margin: 0 7px;
+      background: #ccc;
+    }
+
+    .stats .small {
+      font-size: 14px;
+    }
+
+    .seprate {
+      width: 98%;
+      margin: 20px auto;
+      /* border-bottom: 1px dashed #ccc; */
+    }
+
+    .seprate ul {
+      list-style-type: none;
+
+      width: 80px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .seprate ul li {
+      display: inline-block;
+      position: relative;
+      height: 3px;
+      width: 3px;
+      background: black;
+      border-radius: 50%;
+      animation: jump 0.8s linear infinite alternate;
+    }
+
+    .seprate ul li:nth-child(1) {
+      background: #ffbe76;
+    }
+
+    .seprate ul li:nth-child(2) {
+      animation-delay: 0.2s;
+      background: #ff7979;
+    }
+
+    .seprate ul li:nth-child(3) {
+      animation-delay: 0.3s;
+      background: #686de0;
+    }
+
+    .seprate ul li:nth-child(4) {
+      animation-delay: 0.1s;
+      background: #6ab04c;
+    }
+
+    .seprate ul li:nth-child(5) {
+      background: #ff7979;
+    }
+
+    @keyframes jump {
+      0% {
+        top: 0;
+        opacity: 0.5;
+      }
+
+      50% {
+        top: 10px;
+      }
+
+      100% {
+        top: 0;
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .two-col .box {
+        width: 96%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <a href="https://github.com/alfalfaw/node-crawler" target="_blank" class="github-corner"
+      aria-label="View source on GitHub">
+      <img src="https://cdn.img.wenhairu.com/images/2020/05/23/YOQNI.png" alt="" />
+    </a>
+    <div class="banner-wrapper">
+      <div class="banner">
+        <h3>
+          每个人的生命都由秒来计算，因为你永远都不知道下一秒会发生什么。
+        </h3>
+      </div>
+    </div>
+    <div class="seprate">
+      <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+    <div class="one-col">
+      <h3>🌸Dynamic</h3>
+      <div class="stats">
+        <span class="value">{{ data.pubdate }}<span class="small">发布</span></span>
+        <span class="value">{{ data.reply }}<span class="small">评论</span></span>
+        <span class="value">{{ data.view }}<span class="small">浏览</span></span>
+      </div>
+      <p>{{ data.content}}</p>
+      <a class="button-holder" href="{{data.play_url}}">浏览更多</a>
+    </div>
+    <div class="seprate">
+      <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+    <div class="two-col">
+      <h3>🍭Photos</h3>
+      {{#each data.pics}}
+      <div class="box">
+        <img src="{{this}}" alt="YOfz0.jpg" border="0" />
+      </div>
+      {{/each}}
+    </div>
+    <div class="line"></div>
+    <footer>
+      <p>&copy;2020 theme by alfalfaw</p>
+      <p>meetliujx@gmail.com</p>
+      <p>本项目仅供学习交流，未经允许不得商用 :)</p>
+    </footer>
+  </div>
+</body>
+
+</html>

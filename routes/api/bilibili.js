@@ -7,6 +7,8 @@ const { vid } = require("../../config/keys");
 const bilibiliDynamicCache = require("../../middleware/bilibili-dynamic-middleware");
 const bilibiliDynamic = require("../../models/bilibili-dynamic");
 const client = require("../../database/redis");
+const sendMail = require("../../tools/sendMail");
+const moment = require("moment");
 
 async function getDynamic(req, res, next) {
   const CARD_TYPE = {
@@ -42,7 +44,7 @@ async function getDynamic(req, res, next) {
       //   console.log(url + params);
       await fetch(url + params, options)
         .then((response) => response.json())
-        .then((result) => {
+        .then(async (result) => {
           // console.log(result);
           const card_list = [];
           cards = result.data.cards;
@@ -67,12 +69,12 @@ async function getDynamic(req, res, next) {
               newCard["cats"] = "视频";
               newCard["aid"] = card.aid;
               newCard["dynamic"] = card.dynamic;
-              newCard["title"] = card.title;
+              newCard["content"] = card.title;
               newCard["desc"] = card.desc;
               newCard["pics"] = [card.pic];
               newCard[
                 "play_url"
-              ] = `https://m.bilibili.com/video/av${card.aid}`;
+              ] = `https://www.bilibili.com/video/av${card.aid}`;
               newCard["coin"] = card.stat.coin;
               newCard["reply"] = card.stat.reply;
               newCard["danmaku"] = card.stat.danmaku;
@@ -85,25 +87,35 @@ async function getDynamic(req, res, next) {
               newCard["content"] = card.vest.content;
               newCard["activity"] = card.sketch;
             } else if (newCard.type === CARD_TYPE.POST) {
+              newCard[
+                "play_url"
+              ] = `https://www.bilibili.com/read/${card_desc.rid_str}`;
               newCard["cats"] = "文章";
-              newCard["title"] = card.title;
+              newCard["content"] = card.title;
               newCard["pics"] = card.origin_image_urls;
               newCard["words"] = card.words;
               newCard["reply"] = "stats" in card ? card.stats.reply : 0;
               newCard["coin"] = "stats" in card ? card.stats.coin : 0;
             } else if (newCard.type === CARD_TYPE.DAILY) {
+              newCard[
+                "play_url"
+              ] = `https://t.bilibili.com/${card_desc.dynamic_id_str}`;
               newCard["cats"] = "日常";
-              newCard["desc"] = card.item.description;
+              newCard["content"] = card.item.description;
               newCard["pics"] = card.item.pictures.map((item) => item.img_src);
               newCard["reply"] = card.item.reply;
             } else if (newCard.type === CARD_TYPE.SHARE) {
+              newCard[
+                "play_url"
+              ] = `https://t.bilibili.com/${card_desc.dynamic_id_str}`;
+
               newCard["cats"] = "分享";
               newCard["content"] = card.item.content;
               newCard["reply"] = card.item.reply;
             } else if (newCard.type === CARD_TYPE.MICRO_VIDEO) {
               newCard["cats"] = "短视频";
               newCard["play_url"] = card.item.video_playurl;
-              newCard["desc"] = card.item.description;
+              newCard["content"] = card.item.description;
               newCard["pics"] = [card.item.cover.unclipped];
               newCard["reply"] = card.item.reply;
 
@@ -118,13 +130,38 @@ async function getDynamic(req, res, next) {
           is_end = result.data.has_more;
           //   console.log(is_end);
           next_offset = result.data.next_offset;
-          if (is_end !== 0) {
+          if (is_end === 0) {
             parse_page();
           } else {
+            // 缓存
             client.setex(req.originalUrl, process.env.CACHE_EXPIRE, 1);
-            bilibiliDynamic.insertMany(dynamic_list);
-
+            // 存入数据库
+            await bilibiliDynamic.insertMany(dynamic_list);
+            // 返回结果
             res.status(200).json({ total: dynamic_list.length, dynamic_list });
+
+            // 发送邮件通知
+            if (process.env.EMAIL_NOTYFICATION === "on") {
+              const { last_pubdate } = req.query;
+              // console.log("email on");
+              // const dynamic = await bilibiliDynamic
+              //   .findOne()
+              //   .sort({ pubdate: -1 });
+              const dynamic = dynamic_list[0];
+
+              if (!last_pubdate || parseInt(last_pubdate) !== dynamic.pubdate) {
+                // to do send email
+                dynamic.pubdate = moment(dynamic.pubdate * 1000).format(
+                  "YYYY-MM-DD HH:mm"
+                );
+
+                sendMail(dynamic, "bilibili-dynamic.handlebars");
+
+                console.log("send email");
+              } else {
+                console.log("do nothing");
+              }
+            }
           }
           //   console.log(next_offset);
         });
