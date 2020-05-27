@@ -1,0 +1,95 @@
+.file__list,
+.file__form {
+  margin-top: 35px;
+}
+.file__form .form-inline {
+  display: flex;
+}
+.file__form .form-inline .form-group {
+  flex: 1;
+}
+.file__form .form-inline .form-group .input-group {
+  width: 100%;
+}
+.file__form .form-inline .form-group .input-group .form-control {
+  border-right: none;
+}
+.file__form .form-inline #btn-submit {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  height: 34px;
+}
+.file__form .form-inline #btn-change {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  height: 34px;
+}
+
+.file__form .form-inline #input-wrapper {
+  position: relative;
+}
+
+.file__form .form-inline #progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  content: "";
+  height: 2px;
+  width: 0;
+  background: #5cb85c;
+  z-index: 999;
+  border-radius: 2px;
+}
+/* #filename {
+  
+  max-width: 30%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#size {
+  width: 100px;
+  text-align: right;
+  margin-right: 15px;
+} */
+
+.file__list .list-group li a {
+  text-decoration: none;
+}
+
+/* .file__list .list-group li span + span {
+  margin-left: 15px;
+} */
+.file__list .list-group li span:first-child {
+  float: left;
+  width: 100px;
+  /* display: inline-block; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.file__list .list-group li:hover span:first-child {
+  color: #23527c;
+}
+
+.file__list .list-group li {
+  position: relative;
+}
+
+.file__list .list-group li span:nth-child(2) {
+  float: left;
+  width: 120px;
+}
+#delete {
+  display: block;
+  background: #d9534f;
+  padding: 0 8px;
+  color: white;
+  position: relative;
+}
+#delete:hover {
+  background: #c9302c;
+}

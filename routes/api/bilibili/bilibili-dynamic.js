@@ -3,11 +3,11 @@ const { URLSearchParams } = require("url");
 const router = express.Router();
 const cheerio = require("cheerio");
 const fetch = require("node-fetch");
-const { vid } = require("../../config/keys");
-const bilibiliDynamicCache = require("../../middleware/bilibili-dynamic-middleware");
-const bilibiliDynamic = require("../../models/bilibili-dynamic");
-const client = require("../../database/redis");
-const sendMail = require("../../tools/sendMail");
+const { vid } = require("../../../config/keys");
+const bilibiliDynamicCache = require("../../../middleware/bilibili-dynamic-middleware");
+const bilibiliDynamic = require("../../../models/bilibili-dynamic");
+const client = require("../../../database/redis");
+const sendMail = require("../../../tools/sendMail");
 const moment = require("moment");
 
 async function getDynamic(req, res, next) {
@@ -118,8 +118,6 @@ async function getDynamic(req, res, next) {
               newCard["content"] = card.item.description;
               newCard["pics"] = [card.item.cover.unclipped];
               newCard["reply"] = card.item.reply;
-
-              // newCard = card;
             }
             // if (newCard["name"]) card_list.push(newCard);
             card_list.push(newCard);
@@ -130,7 +128,7 @@ async function getDynamic(req, res, next) {
           is_end = result.data.has_more;
           //   console.log(is_end);
           next_offset = result.data.next_offset;
-          if (is_end === 0) {
+          if (is_end !== 0) {
             parse_page();
           } else {
             // 缓存
@@ -163,9 +161,13 @@ async function getDynamic(req, res, next) {
                     hitokoto = result.hitokoto;
                   });
 
-                sendMail({ dynamic, hitokoto }, "bilibili-dynamic.handlebars");
-
-                console.log("send email");
+                sendMail({ dynamic, hitokoto }, "bilibili-dynamic.handlebars")
+                  .then(() => {
+                    console.log("mail send");
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
               } else {
                 console.log("do nothing");
               }

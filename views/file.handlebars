@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="../public/css/file.css">
+<div class="row file__form">
+    <div class="col-md-6 col-md-offset-3">
+        {{!-- 必须指定encType --}}
+        <form class="form-inline" encType="multipart/form-data" method="post" action="/file/upload">
+            <div class="form-group">
+                {{!-- <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label> --}}
+                <div class="input-group">
+                    <span id="progress-bar"></span>
+                    <input name="url" id="input-text-or-file" type="text" class="form-control" placeholder="输入URL地址">
+                </div>
+            </div>
+            <button id="btn-change" class="btn btn-primary">
+                浏览
+            </button>
+            <button id="btn-submit" type="submit" class="btn btn-primary">
+                <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+            </button>
+
+        </form>
+    </div>
+</div>
+<div class="row file__list">
+    <div class="col-md-8 col-md-offset-2">
+        <a href="javascript:void(0)" class="list-group-item active">
+            文件
+        </a>
+        <ul class="list-group">
+            {{#each files}}
+            <li class="list-group-item clearfix">
+                <a class="pull-left" href="/file/download/{{this.name}}">
+                    <span class="text-info">{{this.name}}</span>
+                    <span id="{{this.upload_id}}" class="text-plain">{{this.size}}</span>
+                    <span>{{this.ctime}}</span>
+                </a>
+                <a id="delete" class="pull-right" href="file/delete/{{this.name}}">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
+
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+
+</div>
+<script src="https://cdn.bootcdn.net/ajax/libs/qs/6.9.4/qs.min.js"></script>
+<!-- socket -->
+<script src="/socket.io/socket.io.js"></script>
+
+<script src="../public/js/upload.js"></script>
+<script>
+
+</script>

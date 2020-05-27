@@ -81,7 +81,8 @@ typings/
 # Nuxt.js build / generate output
 .nuxt
 dist
-
+uploads
+export all_proxy=127.0.0.1:1080
 # Gatsby files
 .cache/
 # Comment in the public line in if your project uses Gatsby and *not* Next.js

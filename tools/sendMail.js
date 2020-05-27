@@ -13,7 +13,7 @@ const {
  * @param {Object} data 数据{key1: value1, key2: value2 }
  * @param {String} filename 邮件模板
  */
-async function sendMail(data, filename) {
+function sendMail(data, filename) {
   var source = fs.readFileSync(
     path.join(__dirname, `../views/mail/${filename}`),
     "utf8"
@@ -34,19 +34,12 @@ async function sendMail(data, filename) {
   // console.log(data);
 
   // send mail with defined transport object
-  await transporter
-    .sendMail({
-      from: `"Crawler App" <${email_from}>`, // sender address
-      to: `${email_to}`, // list of receivers
-      subject: "订阅邮件", // Subject line
-      html: template(data), // html body
-    })
-    .then(() => {
-      console.log("mail sended");
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  return transporter.sendMail({
+    from: `"Crawler App" <${email_from}>`, // sender address
+    to: `${email_to}`, // list of receivers
+    subject: "订阅邮件", // Subject line
+    html: template(data), // html body
+  });
 }
 
 module.exports = sendMail;
