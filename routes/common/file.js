@@ -53,7 +53,8 @@ async function getFileList() {
   const order = 1;
   const dir = process.env.UPLOAD_DIR;
   const files = await readdirAsync(dir);
-  const infos = await Promise.all(
+
+  let infos = await Promise.all(
     files.map((name) =>
       statAsync(path.join(dir, name)).then((stat) => ({
         name,
@@ -61,9 +62,12 @@ async function getFileList() {
       }))
     )
   );
+
   infos.sort(
     (a, b) => order * (b.stat.ctime.getTime() - a.stat.ctime.getTime())
   );
+  infos = infos.filter((item) => item.stat.isFile() === true);
+  // console.log(infos);
   return Promise.all(
     infos.map(async (info) => {
       return {
