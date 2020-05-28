@@ -1,9 +1,21 @@
 const btn_change = document.querySelector("#btn-change");
 const btn_submit = document.querySelector("#btn-submit");
 const input = document.querySelector("#input-text-or-file");
-const btn_delete = document.getElementById("delete");
 const ul = document.querySelector(".file__list ul");
 const socket = io();
+
+function addDeleteListener(btn) {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    let data = new FormData();
+    data.append("name", btn.getAttribute("data-name"));
+    axios.post("file/delete", data).then((res) => {
+      if (res.data.status === "ok") {
+        window.location.href = res.data.redirect_url;
+      }
+    });
+  });
+}
 socket.on("complete", (upload_id, size) => {
   // console.log(`${upload_id}离线下载成功`);
   document.getElementById(upload_id).innerHTML = `${size}`;
@@ -18,10 +30,13 @@ socket.on("uploadStart", (upload_id, name, time) => {
   <span class="text-plain" id=${upload_id}>0/0</span>
   <span>${time}</span>
 </a>
-<a id="delete" class="pull-right" href="file/delete/${name}">
-  <i class="fa fa-trash" aria-hidden="true"></i>
+<a class="delete pull-right" href="#" data-name="${name}">
+    <i class="fa fa-trash" aria-hidden="true"></i>
 </a>
   `;
+  console.log(upload_id);
+
+  addDeleteListener(li.children[1]);
   ul.prepend(li);
 });
 socket.on("progressUpdate", (upload_id, receive, total) => {
@@ -81,3 +96,8 @@ btn_submit.addEventListener("click", (e) => {
 //   e.preventDefault();
 //   prompt("dokdk", "dks");
 // });
+
+const delete_btns = document.querySelectorAll(".delete");
+delete_btns.forEach((btn) => {
+  addDeleteListener(btn);
+});

@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app"
+    "dev": "nodemon app",
+    "pm2": "pm2 start --name crawler app.js"
   },
   "keywords": [],
   "author": "",

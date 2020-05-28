@@ -83,13 +83,13 @@
   float: left;
   width: 120px;
 }
-#delete {
+.delete {
   display: block;
   background: #d9534f;
   padding: 0 8px;
   color: white;
   position: relative;
 }
-#delete:hover {
+.delete:hover {
   background: #c9302c;
 }

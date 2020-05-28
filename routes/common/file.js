@@ -203,14 +203,16 @@ module.exports = function (io) {
   });
 
   // 删除文件
-  router.get("/delete/:filename", (req, res) => {
-    const { filename } = req.params;
-    const path = process.env.UPLOAD_DIR + "/" + filename;
+  router.post("/delete", (req, res) => {
+    const { name } = req.body;
+    // console.log(name);
+
+    const path = process.env.UPLOAD_DIR + "/" + name;
 
     fs.unlinkSync(path);
-    res.redirect("/file");
     // 删除缓存
-    client.del(filename);
+    client.del(name);
+    res.json({ status: "ok", redirect_url: "/file" });
   });
 
   return router;
