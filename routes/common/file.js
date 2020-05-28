@@ -205,7 +205,7 @@ module.exports = function (io) {
   // 删除文件
   router.get("/delete/:filename", (req, res) => {
     const { filename } = req.params;
-    const path = process.env.UPLOAD_DIR + "/" + encodeURI(filename);
+    const path = process.env.UPLOAD_DIR + "/" + filename;
 
     fs.unlinkSync(path);
     res.redirect("/file");
