@@ -4,8 +4,8 @@ const fs = require("fs");
 const util = require("util");
 const path = require("path");
 const download = require("../../tools/download");
-const request = require("request");
 const moment = require("moment");
+const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
 const client = require("../../database/redis");
 // https://www.wandoujia.com/apps/8095853/download/dot
@@ -130,53 +130,48 @@ module.exports = function (io) {
       // 缓存
       client.set(filename, upload_id);
 
-      const file = fs.createWriteStream(path);
+      const writer = fs.createWriteStream(path);
+
+      const { data, headers } = await axios({
+        url,
+        method: "GET",
+        responseType: "stream",
+      });
+      const totalBytes = headers["content-length"];
       let receivedBytes = 0;
-      let totalBytes = 0;
       let cnt = 0;
       // let percent = 0;
-
-      request
-        .get(url)
-        .on("response", (response) => {
-          if (response.statusCode !== 200) {
-            console.log("err");
-          }
-          totalBytes = response.headers["content-length"];
-        })
-        .on("data", (chunk) => {
-          receivedBytes += chunk.length;
-          cnt++;
-          if (cnt > 100) {
-            // percent = ((receivedBytes / totalBytes) * 100).toFixed(1);
-            io.emit(
-              "progressUpdate",
-              upload_id,
-              calSize(receivedBytes),
-              calSize(totalBytes)
-            );
-            // console.log(`download:${percent}%`);
-            cnt = 0;
-          }
-        })
-        .pipe(file)
-        .on("error", (err) => {
-          fs.unlink(path);
-        });
-
-      file.on("finish", () => {
-        // 下载完成关闭文件
-        io.emit("complete", upload_id, calSize(totalBytes));
-        file.close();
-        // 删除缓存
-        // client.del(filename);
+      data.on("data", (chunk) => {
+        receivedBytes += chunk.length;
+        cnt++;
+        if (cnt > 10) {
+          io.emit(
+            "progressUpdate",
+            upload_id,
+            calSize(receivedBytes),
+            calSize(totalBytes)
+          );
+          // percent = ((receivedBytes / totalBytes) * 100).toFixed(1);
+          // console.log(`percent:${percent}%`);
+          cnt = 0;
+        }
       });
+      data.pipe(writer);
 
-      file.on("error", (err) => {
+      data.on("error", (error) => {
         // 删除下载错误文件
         fs.unlink(path);
         // 删除缓存
         client.del(filename);
+        console.error(error);
+      });
+      data.on("end", () => {
+        // 下载完成关闭文件
+        io.emit("complete", upload_id, calSize(totalBytes));
+        // 删除缓存
+        client.del(filename);
+
+        // console.log(`total:${totalBytes},received:${receivedBytes}`);
       });
     });
   });
